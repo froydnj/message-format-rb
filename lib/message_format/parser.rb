@@ -50,15 +50,7 @@ module MessageFormat
     end
 
     def is_whitespace ( char )
-      char == "\s" or
-      char == "\t" or
-      char == "\n" or
-      char == "\r" or
-      char == "\f" or
-      char == "\v" or
-      char == "\u00A0" or
-      char == "\u2028" or
-      char == "\u2029"
+      char.match?(/[\s\t\n\r\f\u00A0\u2028\u2029]/)
     end
 
     def skip_whitespace ()
