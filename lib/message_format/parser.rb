@@ -181,14 +181,18 @@ module MessageFormat
       id
     end
 
+    ARG_TYPES = [
+      'number', 'date', 'time', 'ordinal', 'duration', 'spellout', 'plural', 'selectordinal', 'select'
+    ].map do |type|
+      [Regexp.new(type), type]
+    end
+    private_constant :ARG_TYPES
+
     def parse_arg_type ()
       skip_whitespace()
       arg_type = nil
-      types = [
-        'number', 'date', 'time', 'ordinal', 'duration', 'spellout', 'plural', 'selectordinal', 'select'
-      ]
-      types.each do |type|
-        if @pattern.slice(@index, type.length) == type
+      ARG_TYPES.each do |regex, type|
+        if @pattern.match?(regex, @index)
           arg_type = type
           @index += type.length
           break
@@ -214,7 +218,7 @@ module MessageFormat
     def parse_plural_offset ()
       skip_whitespace()
       offset = 0
-      if @pattern.slice(@index, 7) == 'offset:'
+      if @pattern.match?(/offset:/, @index)
         @index += 7 # move passed offset:
         skip_whitespace()
         start = @index
